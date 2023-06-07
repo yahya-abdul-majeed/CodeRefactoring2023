@@ -31,13 +31,17 @@ namespace ModelsLibrary.Utilities
         Handled,
         InProcess
     }
-    public static class SD
+    public interface ISD
+    {
+       public const string XAccessToken = "X-Access-Token";
+       public ClaimsPrincipal getPrincipal();
+    }
+    public class SD:ISD
     {
         public const string XAccessToken = "X-Access-Token";
-
         
 
-       public static ClaimsPrincipal getPrincipal()
+       public ClaimsPrincipal getPrincipal()
         {
             var httpContextAccessor = new HttpContextAccessor();
             var token = httpContextAccessor.HttpContext?.Request.Cookies[XAccessToken];

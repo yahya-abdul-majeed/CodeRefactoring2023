@@ -17,9 +17,11 @@ namespace CLabManager_Web.Areas.Admin.Controllers
     public class LabController : Controller
     {
         private readonly IToastNotification _toastNotification;
-        public LabController(IToastNotification toastNotification)
+        private readonly ISD _sd;
+        public LabController(IToastNotification toastNotification, ISD sd)
         {
             _toastNotification = toastNotification;
+            _sd = sd;
         }
         public void Redirector(int? LabId)
         {
@@ -27,9 +29,9 @@ namespace CLabManager_Web.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Create(int? LabId)
         {
-            if (SD.getPrincipal().Identity == null)
+            if (_sd.getPrincipal().Identity == null)
                 return RedirectToAction("AccessDenied", "Authentication", new { Area = "User" });
-            if (SD.getPrincipal().IsInRole("User"))
+            if (_sd.getPrincipal().IsInRole("User"))
                 return RedirectToAction("AccessDenied", "Authentication", new { Area = "User" });
             CreateLabVM vm = new CreateLabVM();
             HttpClient httpClient = new HttpClient();
@@ -93,7 +95,7 @@ namespace CLabManager_Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateLab(LabCreationDTO dto)
         {
-            if (SD.getPrincipal().IsInRole("User"))
+            if (_sd.getPrincipal().IsInRole("User"))
                 return RedirectToAction("AccessDenied", "Authentication", new { Area = "User" });
             var url = "https://localhost:7138/api/Labs";
             Lab lab = new Lab();

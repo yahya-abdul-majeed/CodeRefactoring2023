@@ -11,17 +11,19 @@ namespace CLabManager_Web.Areas.Admin.Controllers
     public class UserRoleController : Controller
     {
         private readonly IToastNotification _toastNotification;
+        private readonly ISD _sd;
 
-        public UserRoleController(IToastNotification toastNotification)
+        public UserRoleController(IToastNotification toastNotification, ISD sd)
         {
             _toastNotification = toastNotification;
+            _sd = sd;
         }
 
         public async Task<IActionResult> Index()
         {
-            if (SD.getPrincipal().Identity == null)
+            if (_sd.getPrincipal().Identity == null)
                 return RedirectToAction("AccessDenied", "Authentication", new { Area = "User" });
-            if (SD.getPrincipal().IsInRole("User"))
+            if (_sd.getPrincipal().IsInRole("User"))
                 return RedirectToAction("AccessDenied", "Authentication", new { Area = "User" });
             var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", HttpContext.Request.Cookies[SD.XAccessToken]);

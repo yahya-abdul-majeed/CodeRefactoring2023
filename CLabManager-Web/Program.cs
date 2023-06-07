@@ -1,6 +1,5 @@
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.Extensions.FileProviders;
+using CLabManager_Web.Repos;
+using ModelsLibrary.Utilities;
 using NToastNotify;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ISD, SD>();
+builder.Services.AddScoped<IIssuesRepo,IssuesRepo>();
 builder.Services.AddMvc().AddNToastNotifyToastr(new ToastrOptions()
 {
     ProgressBar = false,

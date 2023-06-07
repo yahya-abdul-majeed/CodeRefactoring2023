@@ -1,5 +1,6 @@
 ﻿@{
-    var user = ModelsLibrary.Utilities.SD.getPrincipal();
+    var sd = new ModelsLibrary.Utilities.SD();
+    var user = sd.getPrincipal();
     var userSignedIn = user.Identity?.IsAuthenticated;
 }
 

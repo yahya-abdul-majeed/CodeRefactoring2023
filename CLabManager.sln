@@ -10,7 +10,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CLabManager-Web", "CLabMana
 		{E7CFB649-1BDE-43D0-A627-54CE4E29F439} = {E7CFB649-1BDE-43D0-A627-54CE4E29F439}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelsLibrary", "ModelsLibrary\ModelsLibrary.csproj", "{E7CFB649-1BDE-43D0-A627-54CE4E29F439}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModelsLibrary", "ModelsLibrary\ModelsLibrary.csproj", "{E7CFB649-1BDE-43D0-A627-54CE4E29F439}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CLabManager-API.Tests", "CLabManager-API.Tests\CLabManager-API.Tests.csproj", "{BA9FC16E-2BB3-41FA-83FB-848B9AA7E9A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CLabManager-Web.Tests", "CLabManager-Web.Tests\CLabManager-Web.Tests.csproj", "{7EFB3DBB-4E97-425F-A919-46753A8CE59E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +34,14 @@ Global
 		{E7CFB649-1BDE-43D0-A627-54CE4E29F439}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E7CFB649-1BDE-43D0-A627-54CE4E29F439}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E7CFB649-1BDE-43D0-A627-54CE4E29F439}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA9FC16E-2BB3-41FA-83FB-848B9AA7E9A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA9FC16E-2BB3-41FA-83FB-848B9AA7E9A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA9FC16E-2BB3-41FA-83FB-848B9AA7E9A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA9FC16E-2BB3-41FA-83FB-848B9AA7E9A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EFB3DBB-4E97-425F-A919-46753A8CE59E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EFB3DBB-4E97-425F-A919-46753A8CE59E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EFB3DBB-4E97-425F-A919-46753A8CE59E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EFB3DBB-4E97-425F-A919-46753A8CE59E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
