@@ -8,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ISD, SD>();
+builder.Services.AddScoped<ILabRepo, LabRepo>();
+builder.Services.AddScoped<IComputerRepo, ComputerRepo>();
 builder.Services.AddScoped<IIssuesRepo,IssuesRepo>();
 builder.Services.AddMvc().AddNToastNotifyToastr(new ToastrOptions()
 {

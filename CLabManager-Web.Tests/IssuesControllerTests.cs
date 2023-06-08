@@ -1,4 +1,5 @@
 using CLabManager_Web.Areas.Admin.Controllers;
+using ModelsLibrary.Models.DTO;
 using CLabManager_Web.Repos;
 using Microsoft.AspNetCore.Mvc;
 using ModelsLibrary.Models;
@@ -7,20 +8,33 @@ using ModelsLibrary.Utilities;
 using Moq;
 using NToastNotify;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 namespace CLabManager_Web.Tests
 {
     public class IssuesControllerTests
     {
+        private readonly Mock<IToastNotification> _mockToastNotif;
+        private readonly Mock<IIssuesRepo> _mockIssuesRepo;
+        private readonly SD _sd;
+        private readonly Mock<ISD> _isdMock;
+        private readonly IssuesController _controller;
+
+        public IssuesControllerTests()
+        {
+            _isdMock = new Mock<ISD>();
+            _mockToastNotif = new Mock<IToastNotification>();
+            _mockIssuesRepo = new Mock<IIssuesRepo>();
+            _sd = new SD();
+            _controller = new IssuesController(_mockToastNotif.Object, _isdMock.Object, _mockIssuesRepo.Object);
+        }
+
         [Fact]
         public async void Index_UnauthenticatedUser_ReturnsRedirectToActionResult()
         {
             //Arrange
-            var mockToastNotif = new Mock<IToastNotification>();
             var SD = new SD();
-            var issueRepoMock= new Mock<IIssuesRepo>();
-
-            var controller = new IssuesController(mockToastNotif.Object, SD,issueRepoMock.Object);
+            var controller = new IssuesController(_mockToastNotif.Object, SD,_mockIssuesRepo.Object);
 
             //Act
             var result = await controller.Index();
@@ -32,14 +46,10 @@ namespace CLabManager_Web.Tests
         public async void Index_authenticatedAdminWithoutParams_ReturnsIssueIndexVM()
         {
             //Arrange
-            var mockToasNotif = new Mock<IToastNotification>();
-            var SDMock = new Mock<ISD>();
-            SDMock.Setup(r => r.getPrincipal()).Returns(getDummyClaimsPrincipal());
-            var issueRepoMock = new Mock<IIssuesRepo>();
-            issueRepoMock.Setup(i => i.GetAllIssues()).Returns(getDummyIssues());
-            var controller = new IssuesController(mockToasNotif.Object, SDMock.Object,issueRepoMock.Object);
+            _isdMock.Setup(r => r.getPrincipal()).Returns(CommonMethods.getDummyClaimsPrincipal("Admin"));
+            _mockIssuesRepo.Setup(i => i.GetAllIssues()).Returns(getDummyIssues());
             //Act
-            var result = await controller.Index();
+            var result = await _controller.Index();
 
             //Assert
             var viewResult = Assert.IsType<ViewResult>(result);
@@ -50,14 +60,10 @@ namespace CLabManager_Web.Tests
         public async void Index_authenticatedAdminWithParams_ReturnsIssueIndexVM()
         {
             //Arrange
-            var mockToasNotif = new Mock<IToastNotification>();
-            var SDMock = new Mock<ISD>();
-            SDMock.Setup(r => r.getPrincipal()).Returns(getDummyClaimsPrincipal());
-            var issueRepoMock = new Mock<IIssuesRepo>();
-            issueRepoMock.Setup(i => i.GetAllIssues()).Returns(getDummyIssues());
-            var controller = new IssuesController(mockToasNotif.Object, SDMock.Object,issueRepoMock.Object);
+            _isdMock.Setup(r => r.getPrincipal()).Returns(CommonMethods.getDummyClaimsPrincipal("Admin"));
+            _mockIssuesRepo.Setup(i => i.GetAllIssues()).Returns(getDummyIssues());
             //Act
-            var result = await controller.Index(4,5,"Urgent","Handled");
+            var result = await _controller.Index(4,5,"Urgent","Handled");
 
             //Assert
             var viewResult = Assert.IsType<ViewResult>(result);
@@ -69,18 +75,28 @@ namespace CLabManager_Web.Tests
         public async void IssueDetail_Admin_ReturnsIssueDetailVM()
         {
             
-            var mockToasNotif = new Mock<IToastNotification>();
-            var SDMock = new Mock<ISD>();
-            SDMock.Setup(r => r.getPrincipal()).Returns(getDummyClaimsPrincipal());
-            var issueRepoMock = new Mock<IIssuesRepo>();
-            issueRepoMock.Setup(i => i.GetExactIssue(It.IsAny<int>())).Returns(getDummyIssue());
-            var controller = new IssuesController(mockToasNotif.Object, SDMock.Object,issueRepoMock.Object);
+            _isdMock.Setup(r => r.getPrincipal()).Returns(CommonMethods.getDummyClaimsPrincipal("Admin"));
+            _mockIssuesRepo.Setup(i => i.GetExactIssue(It.IsAny<int>())).Returns(getDummyIssue());
             //Act
-            var result = await controller.IssueDetail(5);
+            var result = await _controller.IssueDetail(5);
 
             //Assert
             var viewResult = Assert.IsType<ViewResult>(result);
             var model = Assert.IsAssignableFrom<IssueDetailVM>(viewResult.Model);
+
+        }
+        [Fact]
+        public async void IssueUpdate_Admin_ReturnsRedirectToActionResult()
+        {
+            
+            _isdMock.Setup(r => r.getPrincipal()).Returns(CommonMethods.getDummyClaimsPrincipal("Admin"));
+            _mockIssuesRepo.Setup(i => i.UpdateIssue(It.IsAny<IssueUpdateDTO>())).Returns(CommonMethods.getDummyHttpResponseMessage());
+            //Act
+            var result = await _controller.IssueUpdate(new IssueUpdateDTO());
+
+            //Assert
+            var Result = Assert.IsType<RedirectToActionResult>(result);
+            Assert.Equal("IssueDetail",Result.ActionName);
 
         }
         private Task<List<Issue>> getDummyIssues()
@@ -119,11 +135,5 @@ namespace CLabManager_Web.Tests
             return Task.FromResult(issue);
         }
 
-        private ClaimsPrincipal getDummyClaimsPrincipal()
-        {
-            var identity = new ClaimsIdentity("yahya");
-            identity.AddClaim(new Claim(ClaimTypes.Role, "Admin"));
-            return new ClaimsPrincipal(identity);
-        }
     }
 }

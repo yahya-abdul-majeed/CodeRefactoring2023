@@ -116,27 +116,19 @@ namespace CLabManager_Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> IssueUpdate(IssueUpdateDTO dto)
         {
-            //var test = User.Identity.Name;
-            //var duck = typeof(HttpContext).GetInterfaces();
-            //var st =  base.Accepted();
-            StringContent content = new StringContent(JsonConvert.SerializeObject(dto));
-            content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-            var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", HttpContext.Request.Cookies[SD.XAccessToken]);
-            using (var response = await httpClient.PutAsync($"https://localhost:7138/api/issues/{dto.IssueId}", content))
+            var response = await _issueRepo.UpdateIssue(dto);
+            if(response.StatusCode == System.Net.HttpStatusCode.Created)
             {
-                if(response.StatusCode == System.Net.HttpStatusCode.Created)
-                {
-                    var apiResponse = await response.Content.ReadAsStringAsync();
-                    _toastNotification.AddSuccessToastMessage("Issue Updated");
-                }
-                else
-                {
-                    _toastNotification.AddErrorToastMessage("Issue Update Failed");
-                }
+                var apiResponse = await response.Content.ReadAsStringAsync();
+                _toastNotification.AddSuccessToastMessage("Issue Updated");
+            }
+            else
+            {
+                _toastNotification.AddErrorToastMessage("Issue Update Failed");
             }
 
-            return RedirectToAction("IssueDetail", new { id = dto.IssueId});
+            var r = RedirectToAction("IssueDetail", new { id = dto.IssueId});
+            return r;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ModelsLibrary.Models;
+using ModelsLibrary.Models.DTO;
 
 namespace CLabManager_Web.Repos
 {
@@ -6,6 +7,6 @@ namespace CLabManager_Web.Repos
     {
         public Task<List<Issue>> GetAllIssues();
         public Task<Issue > GetExactIssue(int id);
-        public HttpResponseMessage UpdateIssue(int id);
+        public Task<HttpResponseMessage > UpdateIssue(IssueUpdateDTO dto);
     }
 }

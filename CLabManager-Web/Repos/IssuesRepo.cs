@@ -1,4 +1,5 @@
 ﻿using ModelsLibrary.Models;
+using ModelsLibrary.Models.DTO;
 using ModelsLibrary.Utilities;
 using Newtonsoft.Json;
 
@@ -37,9 +38,13 @@ namespace CLabManager_Web.Repos
             }
         }
 
-        public HttpResponseMessage UpdateIssue(int id)
+        public async Task<HttpResponseMessage > UpdateIssue(IssueUpdateDTO dto)
         {
-            throw new NotImplementedException();
+            StringContent content = new StringContent(JsonConvert.SerializeObject(dto));
+            content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _contextAccessor.HttpContext?.Request.Cookies[SD.XAccessToken]);
+            return await httpClient.PutAsync($"https://localhost:7138/api/issues/{dto.IssueId}", content);
         }
     }
 }
