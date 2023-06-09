@@ -103,6 +103,39 @@ namespace CLabManager_API.Tests
             Assert.IsType<AuthenticationResponse>(authenticationResponse);
 
         }
+        [Fact]
+        public async void SignUp_InvalidModel_ReturnsBadRequestObjectResult()
+        {
+            var userData = new SignUpUser 
+            {
+                Email = "something@gmail.com",
+                Password = "password",
+                UserName = "someone" 
+            };
+            _authController.ModelState.AddModelError("email", "invalid");
+            var result = await _authController.SignUp(userData);
+            var BadRequestObjectResult = result.Result;
+            Assert.IsAssignableFrom<BadRequestObjectResult>(BadRequestObjectResult);
+
+        }
+        [Fact]
+        public async void SignUp_UserCreationFails_ReturnsBadObjectResult()
+        {
+            _mockUserManager.Setup(r => r.AddToRoleAsync(It.IsAny<IdentityUser>(), It.IsAny<string>())).Returns(CreateIdentityResult());
+            _mockUserManager.Setup(r => r.CreateAsync(It.IsAny<IdentityUser>(),It.IsAny<string>())).Returns(Task.FromResult(IdentityResult.Failed()));
+            _mockUserManager.Setup(r => r.FindByEmailAsync(It.IsAny<string>())).ReturnsAsync(CreateUser());
+            _mockJwtService.Setup(r => r.CreateToken(It.IsAny<IdentityUser>())).Returns(CreateAuthenticationResponse());
+            var userData = new SignUpUser 
+            {
+                Email = "something@gmail.com",
+                Password = "password",
+                UserName = "someone" 
+            };
+            var result = await _authController.SignUp(userData);
+            var BadRequestObjectResult = result.Result;
+            Assert.IsType<BadRequestObjectResult>(BadRequestObjectResult);
+
+        }
         private AuthenticationResponse CreateAuthenticationResponse()
         {
             return new AuthenticationResponse
