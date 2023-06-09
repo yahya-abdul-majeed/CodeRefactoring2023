@@ -10,15 +10,11 @@ namespace CLabManager_API.Controllers
     public class AuthController:ControllerBase
     {
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManger;
         private readonly JwtService _jwtService;
-        private RoleManager<IdentityRole> _roleManager { get; }
 
-        public AuthController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManger, RoleManager<IdentityRole> roleManager, JwtService jwtService)
+        public AuthController(UserManager<IdentityUser> userManager, JwtService jwtService)
         {
             _userManager = userManager;
-            _signInManger = signInManger;
-            _roleManager = roleManager;
             _jwtService = jwtService;
         }
         [HttpPost("signin")]
@@ -73,7 +69,7 @@ namespace CLabManager_API.Controllers
                 return BadRequest(result.Errors);
             }
             var user = await _userManager.FindByEmailAsync(userData.Email);
-            await _userManager.AddToRoleAsync(user, "User");
+            var identityResult = await _userManager.AddToRoleAsync(user, "User");
             var token = _jwtService.CreateToken(user);
             return token;
         }

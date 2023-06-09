@@ -20,7 +20,7 @@ namespace CLabManager_API.Services
             _userManager = userManager;
         }
 
-        public AuthenticationResponse CreateToken(IdentityUser user)
+        public virtual AuthenticationResponse CreateToken(IdentityUser user)
         {
             var expiration = DateTime.UtcNow.AddMinutes(EXPIRATION_MINUTES);
             var token = CreateJwtToken(CreateClaims(user),expiration,CreateSigningCredentials());
@@ -44,7 +44,7 @@ namespace CLabManager_API.Services
 
         private Claim[] CreateClaims(IdentityUser user)
         {
-            string role;
+            string role = " ";
             if (_userManager.IsInRoleAsync(user, "Admin").GetAwaiter().GetResult())
                 role = "Admin";
             else
