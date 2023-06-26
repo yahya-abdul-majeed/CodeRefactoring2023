@@ -34,9 +34,7 @@ namespace CLabManager_Web.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Create(int? LabId)
         {
-            if (_sd.getPrincipal().Identity == null)
-                return RedirectToAction("AccessDenied", "Authentication", new { Area = "User" });
-            if (_sd.getPrincipal().IsInRole("User"))
+            if (_sd.getPrincipal().Identity == null || _sd.getPrincipal().IsInRole("User") )
                 return RedirectToAction("AccessDenied", "Authentication", new { Area = "User" });
             CreateLabVM vm = new CreateLabVM();
             vm.Lab = await _labRepo.GetExactLab(LabId);
