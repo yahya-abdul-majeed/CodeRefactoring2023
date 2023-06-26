@@ -25,10 +25,6 @@ namespace CLabManager_Web.Areas.User.Controllers
             using (var httpClient = new HttpClient())
             {
                 httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", HttpContext.Request.Cookies[SD.XAccessToken]);
-                //httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/plain"));
-                //httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + _contextAccessor.HttpContext.Request.Cookies[SD.XAccessToken]);
-                //Request.Headers.Authorization = "Bearer " + HttpContext.Request.Cookies[SD.XAccessToken];
-                // GetAwaiter() is blocking, use await instead
                 using (var response =await httpClient.GetAsync("https://localhost:7138/api/labs")) // for jwt, url should be https
                 {
                     var apiResponse = await response.Content.ReadAsStringAsync();
