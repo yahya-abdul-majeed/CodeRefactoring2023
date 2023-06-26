@@ -61,14 +61,14 @@ namespace CLabManager_Web.Areas.Admin.Controllers
             if (_sd.getPrincipal().IsInRole("User"))
                 return RedirectToAction("AccessDenied", "Authentication", new { Area = "User" });
             Lab lab = new Lab();
-            var obj = new
+            var requestData = new
             {
                 roomNo = dto.RoomNo,
                 buildingNo = dto.BuildingNo,
                 gridType = dto.GridType,
                 status = dto.Status
             };
-            var response = await _labRepo.PostLab(obj);
+            var response = await _labRepo.PostLab(requestData);
 
             if (response.StatusCode == HttpStatusCode.Created)
             {
