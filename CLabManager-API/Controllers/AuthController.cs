@@ -70,8 +70,7 @@ namespace CLabManager_API.Controllers
             }
             var user = await _userManager.FindByEmailAsync(userData.Email);
             var identityResult = await _userManager.AddToRoleAsync(user, "User");
-            var token = _jwtService.CreateToken(user);
-            return token;
+            return _jwtService.CreateToken(user);
         }
 
     }
