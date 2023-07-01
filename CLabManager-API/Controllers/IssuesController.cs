@@ -54,11 +54,11 @@ namespace CLabManager_API.Controllers
         }
 
         [HttpPost,Authorize]
-        public async Task<ActionResult<Issue>> PostIssue(IssueCreationDTO issueDTO)
+        public async Task<ActionResult<Issue>> PostIssue(IssueCreationDTO issueCreationDTO)
         {
             if (_db.Issues == null)
                 return NotFound();
-            var issue = _mapper.Map<Issue>(issueDTO);
+            var issue = _mapper.Map<Issue>( issueCreationDTO);
             if(issue.Title == string.Empty || issue.Description == string.Empty)
                 return UnprocessableEntity();
             _db.Issues.Add(issue);
