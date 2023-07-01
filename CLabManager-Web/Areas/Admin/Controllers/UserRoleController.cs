@@ -51,14 +51,13 @@ namespace CLabManager_Web.Areas.Admin.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     _toastNotification.AddSuccessToastMessage("Role Updated");
-                    return RedirectToAction(nameof(Index));
                 }
                 else
                 {
                     _toastNotification.AddErrorToastMessage("Role Update Failed");
-                    return RedirectToAction(nameof(Index));
 
                 }
+                return RedirectToAction(nameof(Index));
 
             }
         }
