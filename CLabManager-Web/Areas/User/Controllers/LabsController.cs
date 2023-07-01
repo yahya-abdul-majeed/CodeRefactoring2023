@@ -54,7 +54,7 @@ namespace CLabManager_Web.Areas.User.Controllers
             LabDetailVM vm = new LabDetailVM();
             using(var response = await httpClient.GetAsync($"https://localhost:7138/api/Labs/{id}"))
             {
-                var apiResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                var apiResponse = await response.Content.ReadAsStringAsync();
                 vm.Lab = JsonConvert.DeserializeObject<Lab>(apiResponse);
             }
             Array values = Enum.GetValues(typeof(IssuePriority));
