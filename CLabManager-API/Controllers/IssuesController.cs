@@ -34,7 +34,6 @@ namespace CLabManager_API.Controllers
         {
             if (_db.Issues == null)
                 return NotFound();
-            //var issue = await _db.Issues.FindAsync(id);
             var issue = await _db.Issues.Include(c => c.Computer).Include(l => l.Lab).Where(x=>x.IssueId== id).FirstOrDefaultAsync();
             if (issue == null)
                 return NotFound();
