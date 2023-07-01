@@ -50,27 +50,37 @@ namespace CLabManager_Web.Areas.Admin.Controllers
             {
                 vm.Issues = vm.Issues.Where(l=>l.State.ToString() == state).ToList();
             }
+            vm.Items = configureVMItems();
+            vm.PItems = configureVMPItems(); 
+            return View(vm);
+        }
+        public List<SelectListItem> configureVMItems()
+        {
             Array values = Enum.GetValues(typeof(IssueState));
-            Array values2 = Enum.GetValues(typeof(IssuePriority));
-            vm.Items = new List<SelectListItem>();
-            vm.PItems = new List<SelectListItem>();
+            var Items = new List<SelectListItem>();
             foreach (var i in values)
             {
-                vm.Items.Add(new SelectListItem
+                Items.Add(new SelectListItem
                 {
                     Text = Enum.GetName(typeof(IssueState), i),
                     Value = i.ToString()
                 });
             }
+            return Items;
+        }
+        public List<SelectListItem> configureVMPItems()
+        {
+            Array values2 = Enum.GetValues(typeof(IssuePriority));
+            var PItems = new List<SelectListItem>();
             foreach(var i in values2)
             {
-                vm.PItems.Add(new SelectListItem
+                PItems.Add(new SelectListItem
                 {
                     Text = Enum.GetName(typeof(IssuePriority), i),
                     Value = i.ToString()
                 });
             }
-            return View(vm);
+            return PItems;
         }
 
         public void Redirecter(int? roomNo = 0, int? buildingNo = 0, string? priority = null, string? state = null)
@@ -88,26 +98,8 @@ namespace CLabManager_Web.Areas.Admin.Controllers
                 return RedirectToAction("AccessDenied", "Authentication", new { Area = "User" });
             IssueDetailVM vm = new IssueDetailVM();
             vm.Issue = await _issueRepo.GetExactIssue(id);
-            Array values = Enum.GetValues(typeof(IssueState));
-            Array values2 = Enum.GetValues(typeof(IssuePriority));
-            vm.Items = new List<SelectListItem>();
-            vm.PItems = new List<SelectListItem>();
-            foreach(var i in values)
-            {
-                vm.Items.Add(new SelectListItem
-                {
-                    Text = Enum.GetName(typeof(IssueState), i),
-                    Value = i.ToString()
-                }); 
-            }
-            foreach(var i in values2)
-            {
-                vm.PItems.Add(new SelectListItem
-                {
-                    Text = Enum.GetName(typeof(IssuePriority), i),
-                    Value = i.ToString()
-                });
-            }
+            vm.Items = configureVMItems();
+            vm.PItems = configureVMPItems(); 
             return View(vm);
         }
 
