@@ -72,11 +72,11 @@ namespace CLabManager_API.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<Computer>> PostComputer(ComputerCreationDTO ComputerDTO)
+        public async Task<ActionResult<Computer>> PostComputer(ComputerCreationDTO computerCreationDTO)
         {
             if (_db.Computers == null)
                 return NotFound();
-            var computer = _mapper.Map<Computer>(ComputerDTO);
+            var computer = _mapper.Map<Computer>( computerCreationDTO);
             if (computer.ComputerName == string.Empty)
                 return UnprocessableEntity();
             _db.Computers.Add(computer);
