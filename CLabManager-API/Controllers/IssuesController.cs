@@ -25,8 +25,7 @@ namespace CLabManager_API.Controllers
         {
             if (_db.Issues == null)
                 return NotFound();
-            var issueList = await _db.Issues.Include(c=>c.Computer).Include(l=>l.Lab).ToListAsync();
-            return issueList;
+            return  await _db.Issues.Include(c=>c.Computer).Include(l=>l.Lab).ToListAsync();
         }
 
         [HttpGet("{id}"),Authorize]
