@@ -26,9 +26,7 @@ namespace CLabManager_API.Controllers
             if(_db.Computers == null)
                 return NotFound();
             var computerList = await _db.Computers.ToListAsync();
-            var computerDtoList = _mapper.Map<List<ComputerDTO>>(computerList);
-
-            return computerDtoList;
+            return _mapper.Map<List<ComputerDTO>>(computerList);
         }
 
         [HttpGet("{id}")]
