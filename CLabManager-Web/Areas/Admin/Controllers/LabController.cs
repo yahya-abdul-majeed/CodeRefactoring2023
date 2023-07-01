@@ -39,20 +39,23 @@ namespace CLabManager_Web.Areas.Admin.Controllers
             CreateLabVM vm = new CreateLabVM();
             vm.Lab = await _labRepo.GetExactLab(LabId);
             vm.UnassignedComputers = await _computerRepo.GetUnassignedComputers();
-            //lab select
             vm.Labs = await _labRepo.GetAllLabs();
-            //gridType select
+            vm.items = ConfigureVMItems();
+            return View(vm);
+        }
+        private List<SelectListItem> ConfigureVMItems()
+        {
             Array values = Enum.GetValues(typeof(GridType));
-            vm.items = new List<SelectListItem>();
+            var Items = new List<SelectListItem>();
             foreach (var i in values)
             {
-                vm.items.Add(new SelectListItem
+                Items.Add(new SelectListItem
                 {
                     Text = Enum.GetName(typeof(GridType), i),
                     Value = i.ToString()
                 });
             }
-            return View(vm);
+            return Items;
         }
 
         [HttpPost]
