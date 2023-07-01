@@ -22,33 +22,33 @@ namespace CLabManager_Web.Areas.Admin.Controllers
             _toastNotification = toastNotification;
             _sd = sd;
         }
-        public async Task<IActionResult> Index(int? roomNo = 0, int? buildingNo = 0, string? priority = null, string? state = null)
+        public async Task<IActionResult> Index(IndexParamObject parameters)
         {
             if (_sd.getPrincipal().Identity == null || _sd.getPrincipal().IsInRole("User") )
                 return RedirectToAction("AccessDenied", "Authentication", new { Area = "User" });
             IssueIndexVM vm = new IssueIndexVM();
             vm.Issues = await _issueRepo.GetAllIssues();
-            if (buildingNo != 0 && roomNo != 0)
+            if (parameters.buildingNo != 0 && parameters.roomNo != 0)
             {
-                vm.Issues = vm.Issues.Where(l => l.Lab.BuildingNo == buildingNo).ToList();
-                vm.Issues = vm.Issues.Where(l => l.Lab.RoomNo == roomNo).ToList();
+                vm.Issues = vm.Issues.Where(l => l.Lab.BuildingNo == parameters.buildingNo).ToList();
+                vm.Issues = vm.Issues.Where(l => l.Lab.RoomNo == parameters.roomNo).ToList();
             }
-            else if (roomNo == 0 && buildingNo != 0)
+            else if (parameters.roomNo == 0 && parameters.buildingNo != 0)
             {
-                vm.Issues = vm.Issues.Where(l => l.Lab.BuildingNo == buildingNo).ToList();
+                vm.Issues = vm.Issues.Where(l => l.Lab.BuildingNo == parameters.buildingNo).ToList();
             }
-            else if (buildingNo == 0 && roomNo != 0)
+            else if (parameters.buildingNo == 0 && parameters.roomNo != 0)
             {
-                vm.Issues = vm.Issues.Where(l => l.Lab.RoomNo == roomNo).ToList();
+                vm.Issues = vm.Issues.Where(l => l.Lab.RoomNo == parameters.roomNo).ToList();
             }
             //checking for state and priority
-            if(priority != "All" && priority != null)
+            if(parameters.priority != "All" && parameters.priority != null)
             {
-                vm.Issues = vm.Issues.Where(l=>l.Priority.ToString() ==priority).ToList();  
+                vm.Issues = vm.Issues.Where(l=>l.Priority.ToString() ==parameters.priority).ToList();  
             }
-            if(state != "All" && state != null)
+            if(parameters.state != "All" && parameters.state != null)
             {
-                vm.Issues = vm.Issues.Where(l=>l.State.ToString() == state).ToList();
+                vm.Issues = vm.Issues.Where(l=>l.State.ToString() == parameters.state).ToList();
             }
             vm.Items = configureVMItems();
             vm.PItems = configureVMPItems(); 
