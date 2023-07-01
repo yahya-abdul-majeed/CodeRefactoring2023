@@ -104,21 +104,5 @@ namespace CLabManager_Web.Areas.Admin.Controllers
             }
         }
 
-        public async Task<IActionResult> DeleteComputer(int compId)
-        {
-            using(var httpClient = new HttpClient())
-            {
-                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers
-                    .AuthenticationHeaderValue("Bearer", HttpContext.Request.Cookies[SD.XAccessToken]);
-                using(var response = await httpClient.DeleteAsync($"https://localhost:7138/api/computers/{compId}"))
-                {
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        _toastNotification.AddErrorToastMessage("Delete failed");
-                    }
-                    return Redirect(_contextAccessor.HttpContext.Request.Headers["Referer"].ToString());
-                }
-            }
-        }
     }
 }
