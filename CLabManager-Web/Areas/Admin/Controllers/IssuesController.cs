@@ -28,31 +28,38 @@ namespace CLabManager_Web.Areas.Admin.Controllers
                 return RedirectToAction("AccessDenied", "Authentication", new { Area = "User" });
             IssueIndexVM vm = new IssueIndexVM();
             vm.Issues = await _issueRepo.GetAllIssues();
+            vm.Issues = configureVMIssues(parameters, vm.Issues);
+            vm.Items = configureVMItems();
+            vm.PItems = configureVMPItems(); 
+            return View(vm);
+        }
+        public List<Issue> configureVMIssues(IndexParamObject parameters,List<Issue> issueList)
+        {
+            var issues = issueList;
             if (parameters.buildingNo != 0 && parameters.roomNo != 0)
             {
-                vm.Issues = vm.Issues.Where(l => l.Lab.BuildingNo == parameters.buildingNo).ToList();
-                vm.Issues = vm.Issues.Where(l => l.Lab.RoomNo == parameters.roomNo).ToList();
+                issues = issues.Where(l => l.Lab.BuildingNo == parameters.buildingNo).ToList();
+                issues  = issues.Where(l => l.Lab.RoomNo == parameters.roomNo).ToList();
             }
             else if (parameters.roomNo == 0 && parameters.buildingNo != 0)
             {
-                vm.Issues = vm.Issues.Where(l => l.Lab.BuildingNo == parameters.buildingNo).ToList();
+                issues = issues.Where(l => l.Lab.BuildingNo == parameters.buildingNo).ToList();
             }
             else if (parameters.buildingNo == 0 && parameters.roomNo != 0)
             {
-                vm.Issues = vm.Issues.Where(l => l.Lab.RoomNo == parameters.roomNo).ToList();
+                issues = issues.Where(l => l.Lab.RoomNo == parameters.roomNo).ToList();
             }
             //checking for state and priority
             if(parameters.priority != "All" && parameters.priority != null)
             {
-                vm.Issues = vm.Issues.Where(l=>l.Priority.ToString() ==parameters.priority).ToList();  
+                issues = issues.Where(l=>l.Priority.ToString() ==parameters.priority).ToList();  
             }
             if(parameters.state != "All" && parameters.state != null)
             {
-                vm.Issues = vm.Issues.Where(l=>l.State.ToString() == parameters.state).ToList();
+                issues = issues.Where(l=>l.State.ToString() == parameters.state).ToList();
             }
-            vm.Items = configureVMItems();
-            vm.PItems = configureVMPItems(); 
-            return View(vm);
+            return issues;
+
         }
         public List<SelectListItem> configureVMItems()
         {
