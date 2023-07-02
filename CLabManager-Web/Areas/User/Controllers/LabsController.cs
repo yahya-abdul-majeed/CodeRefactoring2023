@@ -13,23 +13,23 @@ namespace CLabManager_Web.Areas.User.Controllers
     public class LabsController : Controller
     {
         private readonly IHttpContextAccessor _contextAccessor;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public LabsController(IHttpContextAccessor contextAccessor)
+        public LabsController(IHttpContextAccessor contextAccessor, IHttpClientFactory httpClientFactory)
         {
             _contextAccessor = contextAccessor;
+            _httpClientFactory = httpClientFactory;
         }
 
         public async Task<IActionResult> Index(int buildingNo, int roomNo)
         {
             List<Lab> labs = new List<Lab>();
-            using (var httpClient = new HttpClient())
+            var httpClient = _httpClientFactory.CreateClient();
+            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", HttpContext.Request.Cookies[SD.XAccessToken]);
+            using (var response =await httpClient.GetAsync("https://localhost:7138/api/labs")) // for jwt, url should be https
             {
-                httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", HttpContext.Request.Cookies[SD.XAccessToken]);
-                using (var response =await httpClient.GetAsync("https://localhost:7138/api/labs")) // for jwt, url should be https
-                {
-                    var apiResponse = await response.Content.ReadAsStringAsync();
-                    labs = JsonConvert.DeserializeObject<List<Lab>>(apiResponse);
-                }
+                var apiResponse = await response.Content.ReadAsStringAsync();
+                labs = JsonConvert.DeserializeObject<List<Lab>>(apiResponse);
             }
             if (buildingNo != 0 && roomNo != 0)
             {
@@ -49,7 +49,7 @@ namespace CLabManager_Web.Areas.User.Controllers
 
         public async Task<IActionResult> LabDetail(int id)
         {
-            var httpClient = new HttpClient();
+            var httpClient = _httpClientFactory.CreateClient();
             httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", HttpContext.Request.Cookies[SD.XAccessToken]);
             LabDetailVM vm = new LabDetailVM();
             using(var response = await httpClient.GetAsync($"https://localhost:7138/api/Labs/{id}"))
