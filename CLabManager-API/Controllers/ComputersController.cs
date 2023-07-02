@@ -77,7 +77,7 @@ namespace CLabManager_API.Controllers
             if (_db.Computers == null)
                 return NotFound();
             var computer = _mapper.Map<Computer>( computerCreationDTO);
-            if (computer.ComputerName == string.Empty)
+            if (!computer.IsValid())
                 return UnprocessableEntity();
             _db.Computers.Add(computer);
             await _db.SaveChangesAsync();
@@ -110,9 +110,7 @@ namespace CLabManager_API.Controllers
             {
                 return NotFound();
             }
-            comp.IsPositioned = dto.IsPositioned;
-            comp.PositionOnGrid = dto.PositionOnGrid;
-            comp.LabId = dto.LabId;
+            comp.UpdatePositionInfo(dto);
             _db.Update(comp);
             await _db.SaveChangesAsync();
             return CreatedAtAction("GetComputer", new { id = comp.ComputerId }, _mapper.Map<ComputerDTO>(comp));

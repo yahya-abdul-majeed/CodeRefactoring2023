@@ -1,4 +1,5 @@
-﻿using ModelsLibrary.Utilities;
+﻿using ModelsLibrary.Models.DTO;
+using ModelsLibrary.Utilities;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ModelsLibrary.Models
@@ -15,6 +16,16 @@ namespace ModelsLibrary.Models
         public int? LabId { get;set; }
         public Lab? Lab { get; set; } //navigation property
 
-        //public ValueTuple<int, int> PositionOnGrid { get;set; }
+        public bool IsValid()
+        {
+            return ComputerName == string.Empty;
+        }
+        public void UpdatePositionInfo(PositionUpdateDTO dto)
+        {
+            IsPositioned = dto.IsPositioned;
+            PositionOnGrid = dto.PositionOnGrid;
+            LabId = dto.LabId;
+        }
+
     }
 }

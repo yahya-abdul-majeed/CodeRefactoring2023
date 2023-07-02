@@ -59,7 +59,7 @@ namespace CLabManager_API.Controllers
             if (_db.Issues == null)
                 return NotFound();
             var issue = _mapper.Map<Issue>( issueCreationDTO);
-            if(issue.Title == string.Empty || issue.Description == string.Empty)
+            if(!issue.IsValid())
                 return UnprocessableEntity();
             _db.Issues.Add(issue);
             await _db.SaveChangesAsync();
@@ -79,9 +79,7 @@ namespace CLabManager_API.Controllers
             {
                 return NotFound();
             }
-            issue.Priority = dto.Priority;
-            issue.State = dto.State;
-
+            issue.UpdateStateAndPriority(dto);
             _db.Update(issue);
             await _db.SaveChangesAsync();
 

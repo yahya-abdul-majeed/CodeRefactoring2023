@@ -1,4 +1,5 @@
-﻿using ModelsLibrary.Utilities;
+﻿using ModelsLibrary.Models.DTO;
+using ModelsLibrary.Utilities;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ModelsLibrary.Models
@@ -17,6 +18,14 @@ namespace ModelsLibrary.Models
         public int LabId { get; set; }
         public Lab Lab { get;set; }
 
-        //submitted by: user
+        public bool IsValid()
+        {
+            return (Title == string.Empty || Description == string.Empty);
+        }
+        public void UpdateStateAndPriority(IssueUpdateDTO dto)
+        {
+            this.State =dto.State;
+            this.Priority =dto.Priority;
+        }
     }
 }
